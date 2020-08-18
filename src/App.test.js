@@ -1,7 +1,6 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import App from "./App"
-import useEvent from '@testing-library/user-event'
 import { fetchShow as mockFetchShow } from './api/fetchShow'
 
 export const showsData = {
@@ -543,8 +542,10 @@ export const showsData = {
 };
 
 jest.mock('./api/fetchShow')
-console.log(mockFetchShow)
 
-test('Render movies when the App launches', () => {
-    
+
+test('Renders when the App launches', () => {
+	mockFetchShow.mockResolvedValueOnce(showsData)
+	render(<App/>)
+	expect( screen.findByText(/supernatural forces and one very strange little girl/i))
 })
