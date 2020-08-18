@@ -2,6 +2,7 @@ import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import App from "./App"
 import { fetchShow as mockFetchShow } from './api/fetchShow'
+import userEvent from '@testing-library/user-event'
 
 export const showsData = {
 	id: 2993,
@@ -544,8 +545,17 @@ export const showsData = {
 jest.mock('./api/fetchShow')
 
 
-test('Renders when the App launches', () => {
+test('Renders and clicks episode list and episodes render', async () => {
 	mockFetchShow.mockResolvedValueOnce(showsData)
 	render(<App/>)
-	expect( screen.findByText(/supernatural forces and one very strange little girl/i))
+	//text appears
+	expect( await screen.findByText(/supernatural forces and one very strange little girl/i))
+	//drowdown selected
+	const dropdown = screen.getByText(/select a season/i);
+	userEvent.click(dropdown);
+	//season selected
+	userEvent.click(screen.getByText(/season 1/i))
+	//check episode count
+	const episodesArray = screen.getAllByTestId(/episode/i)
+	expect(episodesArray).toHaveLength(8)
 })
